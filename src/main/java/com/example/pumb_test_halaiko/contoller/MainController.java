@@ -1,7 +1,6 @@
 package com.example.pumb_test_halaiko.contoller;
 
 import com.example.pumb_test_halaiko.pojo.Animal;
-import com.example.pumb_test_halaiko.pojo.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
 
+
+
     /**
      * load main page function
      *
@@ -27,6 +28,7 @@ public class MainController {
      */
     @GetMapping("")
     public String getMainPage(Model model) {
+
         return "index";
     }
 

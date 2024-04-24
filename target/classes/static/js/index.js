@@ -1,28 +1,37 @@
+// Selecting form element and necessary dropdowns
 const form = document.querySelector('form');
 const filterSelect = document.getElementById("filter");
 const sortSelect = document.getElementById("sort");
+
+// Converting options of sortSelect into an array of values
 const sortValues = Array.from(sortSelect.options).map(option => option.value);
+
+// Adding event listener for form submit
 form.addEventListener('submit', handleSubmit);
 
+// Running updateSelects function when DOM content is loaded
 document.addEventListener("DOMContentLoaded", function() {
     updateSelects();
 });
 
+// Adding event listener for filterSelect change
 filterSelect.addEventListener("change", function() {
     updateSelects();
 });
 
+// Function to display file name in the label
 function displayFileName(input) {
     const fileName = input.files[0].name;
     document.getElementById('file-label').innerText = fileName;
 }
 
+// Function to handle form submission
 function handleSubmit(event) {
     event.preventDefault();
-
     uploadFiles();
 }
 
+// Function to upload files via fetch API
 function uploadFiles() {
     const url = '/api/v1/test_task/files/uploads';
     const formData = new FormData();
@@ -38,6 +47,7 @@ function uploadFiles() {
     fetch(url, fetchOptions).then(r => console.log(r.ok));
 }
 
+// Function to update options in sortSelect based on selected value in filterSelect
 function updateSelects() {
     sortSelect.innerHTML = '';
 
@@ -53,6 +63,7 @@ function updateSelects() {
     });
 }
 
+// Function to search elements based on selected filter and sort options
 function searchElements() {
     const filterType = document.getElementById("filter").value;
     const sortBy = document.getElementById("sort").value;
