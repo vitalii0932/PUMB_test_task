@@ -1,11 +1,8 @@
-package com.example.pumb_test_halaiko.pojo;
+package com.example.pumb_test_halaiko.model;
 
-import com.example.pumb_test_halaiko.enums.Category;
 import com.example.pumb_test_halaiko.enums.Sex;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * simple animal data class
@@ -22,5 +19,6 @@ public class Animal {
     private Sex sex;
     private Double weight;
     private Double cost;
+    @ManyToOne
     private Category category;
 }

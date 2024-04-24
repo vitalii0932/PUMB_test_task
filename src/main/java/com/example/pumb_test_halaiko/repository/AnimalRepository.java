@@ -1,6 +1,6 @@
 package com.example.pumb_test_halaiko.repository;
 
-import com.example.pumb_test_halaiko.pojo.Animal;
+import com.example.pumb_test_halaiko.model.Animal;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

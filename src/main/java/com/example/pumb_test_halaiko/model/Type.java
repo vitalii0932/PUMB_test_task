@@ -1,4 +1,4 @@
-package com.example.pumb_test_halaiko.pojo;
+package com.example.pumb_test_halaiko.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

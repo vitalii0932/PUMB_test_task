@@ -1,6 +1,6 @@
 package com.example.pumb_test_halaiko.repository;
 
-import com.example.pumb_test_halaiko.enums.Category;
+import com.example.pumb_test_halaiko.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

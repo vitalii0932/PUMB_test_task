@@ -1,6 +1,6 @@
 package com.example.pumb_test_halaiko.contoller;
 
-import com.example.pumb_test_halaiko.pojo.Animal;
+import com.example.pumb_test_halaiko.model.Animal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
