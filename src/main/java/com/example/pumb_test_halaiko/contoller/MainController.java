@@ -1,6 +1,7 @@
 package com.example.pumb_test_halaiko.contoller;
 
 import com.example.pumb_test_halaiko.model.Animal;
+import com.example.pumb_test_halaiko.service.AnimalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -8,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
 
-
+    private final AnimalService animalService;
 
     /**
      * load main page function
@@ -28,7 +30,6 @@ public class MainController {
      */
     @GetMapping("")
     public String getMainPage(Model model) {
-
         return "index";
     }
 
@@ -40,7 +41,12 @@ public class MainController {
      */
     @PostMapping("/files/uploads")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
-        System.out.println(multipartFile.getSize());
+        try {
+            animalService.readFile(multipartFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return ResponseEntity.ok(String.valueOf(multipartFile.getSize()));
     }
 

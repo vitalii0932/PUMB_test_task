@@ -16,7 +16,7 @@ public class Animal {
     private String name;
     @ManyToOne
     private Type type;
-    private Sex sex;
+    private String sex;
     private Double weight;
     private Double cost;
     @ManyToOne
