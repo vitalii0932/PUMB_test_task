@@ -64,3 +64,11 @@ select * from Animails [42102-224]
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "ANIMAILS" не найдена
 Table "ANIMAILS" not found; SQL statement:
 select * from animails [42102-224]
+2024-04-24 20:27:30.643909+03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "ANIMALS" не найдена
+Table "ANIMALS" not found; SQL statement:
+insert into animals (category_id,cost,name,sex,type_id,weight,id) values (?,?,?,?,?,?,?) [42102-224]
+2024-04-24 20:30:12.925058+03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Таблица "ANIMAL" не найдена
+Table "ANIMAL" not found; SQL statement:
+delete from animal where id > 0 [42102-224]

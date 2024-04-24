@@ -15,6 +15,8 @@
     </div>
 
     <div class="block">
+        <p id="request" style="margin-top: 0; font-size: 20px"></p>
+
         <form enctype="multipart/form-data">
             <label for="file" class="custom-file-input">Завантажте файл</label>
             <input type="file" id="file" name="file" onchange="displayFileName(this)" accept=".csv, .xml, .txt">
@@ -27,14 +29,13 @@
     <div class="block">
         <div class="select-options">
             <span style="padding: 10px">Оберіть тип фільтрування:</span>
-            <select class="select-css" style="width: 20%" id="filter">
+            <select class="select-css" style="width: 15%" id="filter">
                 <option>Type</option>
                 <option>Category</option>
                 <option>Sex</option>
             </select>
 
-            <span style="padding: 10px">Оберіть тип сортування:</span>
-            <select class="select-css" style="width: 20%" id="sort">
+            <select class="select-css" style="width: 15%" id="filter_param">
                 <option>type.Dog</option>
                 <option>type.Cat</option>
                 <option>category.First</option>
@@ -44,7 +45,14 @@
                 <option>sex.Female</option>
             </select>
 
-            <select class="select-css" style="width: 10%" id="sortLike">
+            <span style="padding: 10px">Оберіть тип сортування:</span>
+            <select class="select-css" style="width: 12%" id="sort">
+                <option>id</option>
+                <option>name</option>
+                <option>...</option>
+            </select>
+
+            <select class="select-css" style="width: 7%" id="sort_param">
                 <option>desc</option>
                 <option>asc</option>
             </select>
