@@ -69,7 +69,7 @@ public class MainController {
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "sortBy") String sortBy
     ) {
-        System.out.println("hello");
+        animalService.findAnimalsByParams(filter, filterBy, sort, sortBy);
         return ResponseEntity.ok(null);
     }
 

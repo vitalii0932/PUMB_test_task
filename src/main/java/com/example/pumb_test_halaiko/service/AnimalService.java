@@ -21,6 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * service class for Animal
@@ -163,5 +164,10 @@ public class AnimalService {
         }
 
         animalRepository.save(animal);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Animal> findAnimalsByParams(String filter, String filterBy, String sort, String sortBy) {
+        animalRepository.findAnimalsByParams(String filter, String filterBy, String sort, String sortBy);
     }
 }
