@@ -4,12 +4,21 @@ create table Type
     name varchar (50) not null
 );
 
+create table Category
+(
+    id int auto_increment primary key ,
+    name varchar(30) not null
+);
+
 create table Animals
 (
     id int auto_increment primary key,
-    type_id int references Type,
-    sex varchar(10),
-    weight float,
-    cost float,
-    category varchar(20)
+    type_id int references Type not null,
+    sex varchar(10) not null,
+    weight float not null check (weight > 0),
+    cost float not null check (weight > 0),
+    category_id int references Category not null
 );
+
+
+

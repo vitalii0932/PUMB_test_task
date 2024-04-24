@@ -1,6 +1,5 @@
 package com.example.pumb_test_halaiko.model;
 
-import com.example.pumb_test_halaiko.enums.Sex;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,12 +10,13 @@ import lombok.Data;
 @Entity(name = "Animals")
 public class Animal {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "animal_sequence")
+    @SequenceGenerator(name = "animal_sequence", sequenceName = "animal_sequence", allocationSize = 1)
     private Integer id;
     private String name;
     @ManyToOne
     private Type type;
-    private Sex sex;
+    private String sex;
     private Double weight;
     private Double cost;
     @ManyToOne

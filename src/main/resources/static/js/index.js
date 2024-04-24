@@ -1,21 +1,21 @@
 // Selecting form element and necessary dropdowns
 const form = document.querySelector('form');
-const filterSelect = document.getElementById("filter");
-const sortSelect = document.getElementById("sort");
+const filterSelect = document.getElementById('filter');
+const filterParamSelect = document.getElementById('filter_param');
 
 // Converting options of sortSelect into an array of values
-const sortValues = Array.from(sortSelect.options).map(option => option.value);
+const sortValues = Array.from(filterParamSelect.options).map(option => option.value);
 
 // Adding event listener for form submit
 form.addEventListener('submit', handleSubmit);
 
 // Running updateSelects function when DOM content is loaded
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
     updateSelects();
 });
 
 // Adding event listener for filterSelect change
-filterSelect.addEventListener("change", function() {
+filterSelect.addEventListener('change', function() {
     updateSelects();
 });
 
@@ -35,49 +35,61 @@ function handleSubmit(event) {
 function uploadFiles() {
     const url = '/api/v1/test_task/files/uploads';
     const formData = new FormData();
-    const file = document.getElementById("file").files[0];
+    const file = document.getElementById('file').files[0];
+    const requestTextField = document.getElementById('request');
 
-    formData.append("file", file)
+    formData.append('file', file)
 
     const fetchOptions = {
         method: 'post',
         body: formData
     };
 
-    fetch(url, fetchOptions).then(r => console.log(r.ok));
+    fetch(url, fetchOptions)
+        .then(response => {
+            return response.text();
+        })
+        .then(text => {
+            requestTextField.textContent = text;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
 }
 
 // Function to update options in sortSelect based on selected value in filterSelect
 function updateSelects() {
-    sortSelect.innerHTML = '';
+    filterParamSelect.innerHTML = '';
 
     const selectedValue = filterSelect.value;
 
     sortValues.forEach(optionText => {
-        console.log(optionText);
         if (optionText.includes(selectedValue.toLowerCase())) {
-            const option = document.createElement("option");
-            option.text = optionText.substring(optionText.indexOf(".") + 1);
-            sortSelect.add(option);
+            const option = document.createElement('option');
+            option.text = optionText.substring(optionText.indexOf('.') + 1);
+            filterParamSelect.add(option);
         }
     });
 }
 
 // Function to search elements based on selected filter and sort options
 function searchElements() {
-    const filterType = document.getElementById("filter").value;
-    const sortBy = document.getElementById("sort").value;
-    const sortLike = document.getElementById("sortLike").value;
+    const filter = document.getElementById('filter').value;
+    const filterBy = document.getElementById('filter_param').value;
+    const sort = document.getElementById('sort').value;
+    const sortBy = document.getElementById('sort_param').value;
 
-    const textArea = document.getElementById("textArea");
+    const textArea = document.getElementById('textArea');
 
     const params = new URLSearchParams({
-        filter: filterType,
-        sort: sortBy,
-        sortLike: sortLike
+        filter: filter,
+        filterBy: filterBy,
+        sort: sort,
+        sortBy: sortBy
     });
 
-    const url = "/api/v1/test_task/filter?" + params;
+    const url = '/api/v1/test_task/filter?' + params;
     fetch(url)
         .then(response => {
             if (!response.ok) {
