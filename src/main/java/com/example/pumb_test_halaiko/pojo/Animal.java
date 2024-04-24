@@ -1,5 +1,7 @@
 package com.example.pumb_test_halaiko.pojo;
 
+import com.example.pumb_test_halaiko.enums.Category;
+import com.example.pumb_test_halaiko.enums.Sex;
 import lombok.Getter;
 import lombok.Setter;
 

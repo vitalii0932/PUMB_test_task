@@ -1,4 +1,4 @@
-package com.example.pumb_test_halaiko.pojo;
+package com.example.pumb_test_halaiko.enums;
 
 /**
  * animal sex enum
