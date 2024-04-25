@@ -20,5 +20,12 @@ create table Animals
     category_id int references Category not null
 );
 
+create table Users
+(
+    id int auto_increment primary key,
+    email varchar(50) not null,
+    password varchar(255) not null
+)
+
 
 
