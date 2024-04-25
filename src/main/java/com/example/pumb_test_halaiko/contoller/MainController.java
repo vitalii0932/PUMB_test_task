@@ -81,13 +81,17 @@ public class MainController {
      * @return response with data
      */
     @GetMapping("/filter")
-    public ResponseEntity<List<Animal>> filterData(
+    public ResponseEntity<?> filterData(
             @RequestParam(name = "filter") String filter,
             @RequestParam(name = "filterBy") String filterBy,
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "sortBy") String sortBy
     ) {
-        return ResponseEntity.ok(animalService.findAnimalsByParams(filter, filterBy, sort, sortBy));
+        try {
+            return ResponseEntity.ok(animalService.findAnimalsByParams(filter, filterBy, sort, sortBy));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        }
     }
 
 }
