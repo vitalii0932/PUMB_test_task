@@ -6,6 +6,7 @@ import com.example.pumb_test_halaiko.model.Type;
 import com.example.pumb_test_halaiko.repository.TypeRepository;
 import com.example.pumb_test_halaiko.service.AnimalService;
 import com.example.pumb_test_halaiko.service.CategoryService;
+import com.example.pumb_test_halaiko.service.FileService;
 import com.example.pumb_test_halaiko.service.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import java.util.List;
 public class MainController {
 
     private final AnimalService animalService;
+    private final FileService fileService;
     private final CategoryService categoryService;
     private final TypeService typeService;
 
@@ -60,10 +62,9 @@ public class MainController {
      * @return download file result response
      */
     @PostMapping("/files/uploads")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile multipartFile,
-                                             RedirectAttributes redirectAttributes) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile multipartFile) {
         try {
-            animalService.readFile(multipartFile);
+            fileService.readFile(multipartFile);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
         }
