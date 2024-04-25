@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * the request used to authenticate the user
+ * the response used to send user his auth token
  */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
-    private String email;
-    private String password;
+@AllArgsConstructor
+public class AuthenticationResponse {
+    private String token;
 }
