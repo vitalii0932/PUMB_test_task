@@ -3,6 +3,10 @@ package com.example.pumb_test_halaiko.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * simple animal data class
  */
@@ -21,4 +25,15 @@ public class Animal {
     private Double cost;
     @ManyToOne
     private Category category;
+
+    /**
+     * get fields from Animal class
+     *
+     * @return a list of strings
+     */
+    public static List<String> getAnimalFields() {
+        return Arrays.stream(Animal.class.getDeclaredFields())
+                .map(field -> field.getName())
+                .collect(Collectors.toList());
+    }
 }

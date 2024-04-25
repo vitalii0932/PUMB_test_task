@@ -65,7 +65,7 @@ function updateSelects() {
     const selectedValue = filterSelect.value;
 
     sortValues.forEach(optionText => {
-        if (optionText.includes(selectedValue.toLowerCase())) {
+        if (optionText.includes(selectedValue)) {
             const option = document.createElement('option');
             option.text = optionText.substring(optionText.indexOf('.') + 1);
             filterParamSelect.add(option);

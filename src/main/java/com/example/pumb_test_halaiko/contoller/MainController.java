@@ -1,7 +1,12 @@
 package com.example.pumb_test_halaiko.contoller;
 
+import com.example.pumb_test_halaiko.enums.Sex;
 import com.example.pumb_test_halaiko.model.Animal;
+import com.example.pumb_test_halaiko.model.Type;
+import com.example.pumb_test_halaiko.repository.TypeRepository;
 import com.example.pumb_test_halaiko.service.AnimalService;
+import com.example.pumb_test_halaiko.service.CategoryService;
+import com.example.pumb_test_halaiko.service.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +29,8 @@ import java.util.List;
 public class MainController {
 
     private final AnimalService animalService;
+    private final CategoryService categoryService;
+    private final TypeService typeService;
 
     /**
      * load main page function
@@ -32,6 +40,16 @@ public class MainController {
      */
     @GetMapping("")
     public String getMainPage(Model model) {
+        var typesFields = typeService.getAllNames();
+        typesFields.addAll(categoryService.getAllNames());
+
+        for(var sex : Sex.values()) {
+            typesFields.add("sex." + sex.toString().toLowerCase());
+        }
+
+        model.addAttribute("typesFields", typesFields);
+
+        model.addAttribute("animalFields", Animal.getAnimalFields());
         return "index";
     }
 
@@ -69,8 +87,8 @@ public class MainController {
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "sortBy") String sortBy
     ) {
-        animalService.findAnimalsByParams(filter, filterBy, sort, sortBy);
-        return ResponseEntity.ok(null);
+
+        return ResponseEntity.ok(animalService.findAnimalsByParams(filter, filterBy, sort, sortBy));
     }
 
 }

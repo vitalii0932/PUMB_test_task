@@ -6,7 +6,14 @@ import com.example.pumb_test_halaiko.model.Type;
 import com.example.pumb_test_halaiko.repository.AnimalRepository;
 import com.example.pumb_test_halaiko.repository.CategoryRepository;
 import com.example.pumb_test_halaiko.repository.TypeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Query;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -20,6 +27,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +37,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AnimalService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final AnimalRepository animalRepository;
     private final CategoryRepository categoryRepository;
@@ -167,7 +178,44 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Animal> findAnimalsByParams(String filter, String filterBy, String sort, String sortBy) {
-        animalRepository.findAnimalsByParams(String filter, String filterBy, String sort, String sortBy);
+    public List<Animal> findAnimalsByParams(String filter, String filterBy, String sort, String sortBy) throws RuntimeException {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Animal> criteriaQuery = builder.createQuery(Animal.class);
+        Root<Animal> root = criteriaQuery.from(Animal.class);
+
+        criteriaQuery.select(root);
+
+        if (filter != null && filterBy != null && !filter.isEmpty() && !filterBy.isEmpty()) {
+            if (filter.equals("type")) {
+                criteriaQuery.where(builder.equal(
+                        root.get(filter),
+                        typeRepository.findByName(filterBy).orElseThrow(
+                        () -> new RuntimeException("Type not found exception")))
+                );
+            } else if (filter.equals("category")) {
+                criteriaQuery.where(builder.equal(
+                        root.get(filter),
+                        categoryRepository.findByName(filterBy).orElseThrow(
+                                () -> new RuntimeException("Category not found exception")))
+                );
+            } else if (filter.equals("sex")) {
+                criteriaQuery.where(builder.equal(
+                        root.get(filter),
+                        filterBy
+                ));
+            } else {
+                throw new RuntimeException("Filter nor found exception");
+            }
+        }
+
+        if (sort != null && sortBy != null && !sort.isEmpty() && !sortBy.isEmpty()) {
+            if ("asc".equalsIgnoreCase(sortBy)) {
+                criteriaQuery.orderBy(builder.asc(root.get(sort)));
+            } else if ("desc".equalsIgnoreCase(sortBy)) {
+                criteriaQuery.orderBy(builder.desc(root.get(sort)));
+            }
+        }
+
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }
