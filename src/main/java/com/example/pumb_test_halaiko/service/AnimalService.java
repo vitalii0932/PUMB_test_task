@@ -6,6 +6,11 @@ import com.example.pumb_test_halaiko.model.Type;
 import com.example.pumb_test_halaiko.repository.AnimalRepository;
 import com.example.pumb_test_halaiko.repository.CategoryRepository;
 import com.example.pumb_test_halaiko.repository.TypeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -21,6 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * service class for Animal
@@ -28,6 +34,10 @@ import java.util.Arrays;
 @Service
 @RequiredArgsConstructor
 public class AnimalService {
+
+    /* get entityManager for create a dynamic select query */
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private final AnimalRepository animalRepository;
     private final CategoryRepository categoryRepository;
@@ -42,17 +52,20 @@ public class AnimalService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Retryable(maxAttempts = 5)
     public void readFile(MultipartFile file) throws Exception {
+        // get the file extension
         String fileName = file.getOriginalFilename();
         String fileExtension = null;
         if (fileName != null && fileName.contains(".")) {
             fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
         }
 
+        // check file extension
         if (fileExtension != null && fileExtension.equals("csv")) {
             readFromCsv(file);
         } else if (fileExtension != null && fileExtension.equals("xml")) {
             readFromXml(file);
         } else {
+            // throw if extension is not supported
             throw new IOException("This file extension is not supported");
         }
     }
@@ -66,15 +79,25 @@ public class AnimalService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Retryable(maxAttempts = 5)
     public void readFromCsv(MultipartFile file) throws Exception {
+        /*
+        get input stream from file,
+        create a buffered reader
+         */
         try (InputStream inputStream = file.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
+
+            /* read file while reader has a new line */
             while ((line = reader.readLine()) != null) {
+                // get values from string and remove empty strings
                 String[] values = Arrays.stream(line.split(","))
                         .filter(str -> !str.isEmpty())
                         .toArray(String[]::new);
+
+                // check do values count is correct
                 if (values.length == 5) {
                     try {
+                        // try to save entity with this values
                         save(values);
                     } catch (IllegalArgumentException ex) {
                         ex.fillInStackTrace();
@@ -93,35 +116,48 @@ public class AnimalService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Retryable(maxAttempts = 5)
     public void readFromXml(MultipartFile file) throws Exception {
+        /*
+        create a DocumentBuilderFactory instance,
+        create a DocumentBuilder instance,
+        parse the XML file into a Document object
+         */
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document document = dBuilder.parse(file.getInputStream());
 
+        /*
+        normalize the document structure,
+        get a NodeList of all elements with the tag name "animal",
+        define the parameters to extract from each "animal" element
+         */
         document.getDocumentElement().normalize();
-
         NodeList nodeList = document.getElementsByTagName("animal");
-
         String[] params = {"name", "type", "sex", "weight", "cost"};
 
+        // loop through each "animal" element in the NodeList
         for (int temp = 0; temp < nodeList.getLength(); temp++) {
             Node node = nodeList.item(temp);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 try {
+                    // cast the Node to an Element
                     Element element = (Element) node;
 
+                    // create an array to store the values of each parameter
                     String[] values = new String[5];
 
+                    // extract values for each parameter from the current "animal" element
                     for (int i = 0; i < params.length; i++) {
                         values[i] = element.getElementsByTagName(params[i]).item(0).getTextContent();
                     }
 
+                    // save the extracted values
                     save(values);
                 } catch (NullPointerException ex) {
+                    // handle any NullPointerExceptions that might occur during value extraction
                     ex.fillInStackTrace();
                 }
             }
         }
-
     }
 
     /**
@@ -133,35 +169,118 @@ public class AnimalService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Retryable(maxAttempts = 5)
     public void save(String[] values) throws IllegalArgumentException {
+        // create a new Animal Entity
         Animal animal = new Animal();
+
+        // set name
         animal.setName(values[0]);
 
+        // set existing type or create a new type
         var type = typeRepository.findByName(values[1])
                 .orElseGet(() -> typeRepository.save(Type.builder().name(values[1]).build()));
-
         animal.setType(type);
 
+        // set sex
         values[2] = values[2].toUpperCase();
-
         if (Sex.contains(values[2])) {
             animal.setSex(values[2].toLowerCase());
         }
 
+        // set weight
         animal.setWeight(Double.parseDouble(values[3]));
+
+        // set cost
         animal.setCost(Double.parseDouble(values[4]));
 
+        // set category
         if (animal.getCost() > 0 && animal.getCost() <= 20) {
+            // if 0 < cost <= 20
             animal.setCategory(categoryRepository.findById(1).orElseThrow());
         } else if (animal.getCost() > 20 && animal.getCost() <= 40) {
+            // if 20 < cost <= 40
             animal.setCategory(categoryRepository.findById(2).orElseThrow());
         } else if (animal.getCost() > 40 && animal.getCost() <= 60) {
+            // if 40 < cost <= 60
             animal.setCategory(categoryRepository.findById(3).orElseThrow());
         } else if (animal.getCost() > 60) {
+            // if 60 < cost
             animal.setCategory(categoryRepository.findById(4).orElseThrow());
         } else {
+            // throw ex is incorrect
             throw new NumberFormatException("price must be greater then 0");
         }
 
+        // save entity in db
         animalRepository.save(animal);
+    }
+
+    /**
+     * dynamic query for searching animal by params function
+     *
+     * @param filter   - searching filter param
+     * @param filterBy - searching filter value
+     * @param sort     - searching sort param
+     * @param sortBy   - sort desc or asc
+     * @return a list of animals
+     * @throws RuntimeException if param is incorrect
+     */
+    @Transactional(readOnly = true)
+    public List<Animal> findAnimalsByParams(String filter, String filterBy, String sortBy, String sort) throws RuntimeException {
+        /*
+        get CriteriaBuilder from EntityManager,
+        create a CriteriaQuery for the Animal entity
+        and specify the root entity for the query
+         */
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Animal> criteriaQuery = builder.createQuery(Animal.class);
+        Root<Animal> root = criteriaQuery.from(Animal.class);
+
+        // select the root entity
+        criteriaQuery.select(root);
+
+        // apply filtering if filter and filterBy are provided
+        if (filter != null && filterBy != null && !filter.isEmpty() && !filterBy.isEmpty()) {
+            // handle filtering based on different fields
+            switch (filter) {
+                case "type" ->
+                    // if filtering by 'type', retrieve Type entity by name and add a predicate
+                        criteriaQuery.where(builder.equal(
+                                root.get(filter),
+                                typeRepository.findByName(filterBy).orElseThrow(
+                                        () -> new RuntimeException("Type not found exception")))
+                        );
+                case "category" ->
+                    // if filtering by 'category', retrieve Category entity by name and add a predicate
+                        criteriaQuery.where(builder.equal(
+                                root.get(filter),
+                                categoryRepository.findByName(filterBy).orElseThrow(
+                                        () -> new RuntimeException("Category not found exception")))
+                        );
+                case "sex" ->
+                    // if filtering by 'sex', directly add a predicate with the provided value
+                        criteriaQuery.where(builder.equal(
+                                root.get(filter),
+                                filterBy
+                        ));
+                default ->
+                    // if the filter field is not recognized, throw an exception
+                        throw new RuntimeException("Filter not found exception");
+            }
+        }
+
+        // apply sorting if sortBy and sort are provided
+        if (sortBy != null && sort != null && !sortBy.isEmpty() && !sort.isEmpty()) {
+            // handle sorting based on the specified field and order
+            if ("asc".equalsIgnoreCase(sort)) {
+                // sort in ascending order
+                criteriaQuery.orderBy(builder.asc(root.get(sortBy)));
+            } else if ("desc".equalsIgnoreCase(sort)) {
+                // sort in descending order
+                criteriaQuery.orderBy(builder.desc(root.get(sortBy)));
+            }
+        }
+
+        // execute the query and return the result list
+        return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }

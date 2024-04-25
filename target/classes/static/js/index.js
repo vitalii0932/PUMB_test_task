@@ -36,7 +36,7 @@ function uploadFiles() {
     const url = '/api/v1/test_task/files/uploads';
     const formData = new FormData();
     const file = document.getElementById('file').files[0];
-    const requestTextField = document.getElementById('request');
+    const requestTextField = document.getElementById('file_request');
 
     formData.append('file', file)
 
@@ -65,7 +65,7 @@ function updateSelects() {
     const selectedValue = filterSelect.value;
 
     sortValues.forEach(optionText => {
-        if (optionText.includes(selectedValue.toLowerCase())) {
+        if (optionText.includes(selectedValue)) {
             const option = document.createElement('option');
             option.text = optionText.substring(optionText.indexOf('.') + 1);
             filterParamSelect.add(option);
@@ -79,6 +79,7 @@ function searchElements() {
     const filterBy = document.getElementById('filter_param').value;
     const sort = document.getElementById('sort').value;
     const sortBy = document.getElementById('sort_param').value;
+    const requestTextField = document.getElementById('search_request');
 
     const textArea = document.getElementById('textArea');
 
@@ -93,13 +94,17 @@ function searchElements() {
     fetch(url)
         .then(response => {
             if (!response.ok) {
+                response.text().then(text => {
+                    requestTextField.textContent = text;
+                }).catch(textError => {
+                    console.error('Error reading response text:', textError);
+                });
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
         .then(data => {
             const jsonString = JSON.stringify(data, null, 2);
-
             textArea.textContent = jsonString;
         })
         .catch(error => {

@@ -15,7 +15,7 @@
     </div>
 
     <div class="block">
-        <p id="request" style="margin-top: 0; font-size: 20px"></p>
+        <p id="file_request" style="margin-top: 0; font-size: 20px"></p>
 
         <form enctype="multipart/form-data">
             <label for="file" class="custom-file-input">Завантажте файл</label>
@@ -30,26 +30,19 @@
         <div class="select-options">
             <span style="padding: 10px">Оберіть тип фільтрування:</span>
             <select class="select-css" style="width: 15%" id="filter">
-                <option>Type</option>
-                <option>Category</option>
-                <option>Sex</option>
+                <option>type</option>
+                <option>category</option>
+                <option>sex</option>
             </select>
 
             <select class="select-css" style="width: 15%" id="filter_param">
-                <option>type.Dog</option>
-                <option>type.Cat</option>
-                <option>category.First</option>
-                <option>category.Second</option>
-                <option>category.Third</option>
-                <option>sex.Male</option>
-                <option>sex.Female</option>
+                <option>type.error</option>
+                <option th:each="el : ${typesFields}" th:text="${el}"></option>
             </select>
 
             <span style="padding: 10px">Оберіть тип сортування:</span>
             <select class="select-css" style="width: 12%" id="sort">
-                <option>id</option>
-                <option>name</option>
-                <option>...</option>
+                <option th:each="el : ${animalFields}" th:text="${el}"></option>
             </select>
 
             <select class="select-css" style="width: 7%" id="sort_param">
@@ -61,6 +54,8 @@
         <button onclick="searchElements()">Пошук елементів</button>
 
         <br>
+
+        <p id="search_request" style="margin-top: 15px; margin-bottom: 0; font-size: 20px"></p>
 
         <textarea contenteditable="false" id="textArea">
         </textarea>
