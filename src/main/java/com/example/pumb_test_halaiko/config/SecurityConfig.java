@@ -34,14 +34,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/api/v1/auth/**", "/api/v1/test_task/**", "/css/**", "/js/**").permitAll()
-                                .requestMatchers("/h2-console/**").authenticated()
+                                .requestMatchers("/h2-console/**", "/h2-console/").authenticated()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(login ->
                         login
-                                .loginPage("/api/v1/auth/login")
+                                .loginPage("/api/v1/auth")
                                 .permitAll()
                 )
+                .headers(headers -> headers.frameOptions().sameOrigin())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

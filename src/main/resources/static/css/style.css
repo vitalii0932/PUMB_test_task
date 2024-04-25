@@ -38,7 +38,7 @@ label {
 }
 
 input[type="file"] {
-    display: none; /* Hide the default file input */
+    display: none;
 }
 
 .custom-file-input {
@@ -87,7 +87,6 @@ button:hover {
     margin-bottom: 20px;
 }
 
-/* Стили для выпадающего списка */
 .select-css {
     font-size: 16px;
     font-family: sans-serif;
@@ -128,16 +127,61 @@ textarea {
     font-size: 16px;
     padding: 10px;
     width: 80%;
-    min-height: 400px; /* Минимальная высота поля */
+    min-height: 400px;
     border: 1px solid #555;
     border-radius: 5px;
-    background-color: #222; /* Темный цвет фона */
-    color: #ccc; /* Цвет текста */
-    resize: vertical; /* Разрешить вертикальное изменение размера */
-    outline: none; /* Убрать обводку при фокусе */
+    background-color: #222;
+    color: #ccc;
+    resize: vertical;
+    outline: none;
 }
 
 textarea:focus {
-    border-color: #59abe3; /* Цвет границы при фокусе */
-    box-shadow: 0 0 0 3px rgba(89, 171, 227, 0.5); /* Тень при фокусе */
+    border-color: #59abe3;
+    box-shadow: 0 0 0 3px rgba(89, 171, 227, 0.5);
 }
+
+.form-block {
+    padding: 40px;
+    border-radius: 15px;
+    border: 2px solid #555555;
+    margin: 250px auto auto;
+    max-width: 500px;
+    height: auto;
+}
+
+#login_form {
+    width: 300px; /* Установите ширину формы по вашему усмотрению */
+    margin: 0 auto; /* Центрируем форму по горизонтали */
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#login_form input[type="text"],
+#login_form input[type="password"] {
+    background-color: #ccc;
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #666; /* Цвет границы текстовых полей */
+    border-radius: 3px;
+    color: #555; /* Цвет текста в текстовых полях */
+}
+
+.logout-btn {
+    margin: 0;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #db323e;
+    border-radius: 15px;
+    border: 2px solid #ad2831;
+    color: antiquewhite;
+    padding: 10px 20px;
+    width: 150px;
+}
+
+.logout-btn:hover {
+    background-color: #ad2831;
+}
+
