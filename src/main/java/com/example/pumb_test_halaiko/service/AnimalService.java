@@ -150,6 +150,8 @@ public class AnimalService {
             } else if ("desc".equalsIgnoreCase(sort)) {
                 // sort in descending order
                 criteriaQuery.orderBy(builder.desc(root.get(sortBy)));
+            } else {
+                throw new RuntimeException("Sort type not found exception");
             }
         }
 

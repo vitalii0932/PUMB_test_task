@@ -368,3 +368,13 @@ Wrong user name or password [28000-224]
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:522)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 106 more
+2024-04-25 21:31:19.370898+03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "delete [*]* from type where id > 5"; ожидалось "identifier"
+Syntax error in SQL statement "delete [*]* from type where id > 5"; expected "identifier"; SQL statement:
+delete * from type where id > 5 [42001-224]
+2024-04-25 21:32:10.314346+03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Синтаксическая ошибка в выражении SQL "update category set name = 'First category' where name = 'Перша категорія'\000d\000a\000d\000a[*]select * from category"
+Syntax error in SQL statement "update category set name = 'First category' where name = 'Перша категорія'\000d\000a\000d\000a[*]select * from category"; SQL statement:
+update category set name = 'First category' where name = 'Перша категорія'
+
+select * from category [42000-224]

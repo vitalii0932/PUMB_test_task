@@ -17,6 +17,8 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<String> getAllNames() {
+        System.out.println(categoryRepository.findAll());
+
         List<String> allTypeNamesWithPrefix = categoryRepository.getAllCategoriesNames().stream()
                 .map(name -> "category." + name)
                 .collect(Collectors.toList());
