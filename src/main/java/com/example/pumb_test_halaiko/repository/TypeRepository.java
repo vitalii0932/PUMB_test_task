@@ -19,6 +19,11 @@ public interface TypeRepository extends JpaRepository<Type, Integer> {
      */
     Optional<Type> findByName(String name);
 
+    /**
+     * get all types names function
+     *
+     * @return a list on names
+     */
     @Query(value = "select name from type", nativeQuery = true)
     List<String> getAllTypesNames();
 }
