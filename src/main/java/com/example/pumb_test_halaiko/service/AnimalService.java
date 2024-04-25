@@ -177,45 +177,72 @@ public class AnimalService {
         animalRepository.save(animal);
     }
 
+    /**
+     * dynamic query for searching animal by params function
+     *
+     * @param filter - searching filter param
+     * @param filterBy - searching filter value
+     * @param sort - searching sort param
+     * @param sortBy - sort desc or asc
+     * @return a list of animals
+     * @throws RuntimeException if param is incorrect
+     */
     @Transactional(readOnly = true)
-    public List<Animal> findAnimalsByParams(String filter, String filterBy, String sort, String sortBy) throws RuntimeException {
+    public List<Animal> findAnimalsByParams(String filter, String filterBy, String sortBy, String sort) throws RuntimeException {
+        /*
+        get CriteriaBuilder from EntityManager,
+        create a CriteriaQuery for the Animal entity
+        and specify the root entity for the query
+         */
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Animal> criteriaQuery = builder.createQuery(Animal.class);
         Root<Animal> root = criteriaQuery.from(Animal.class);
 
+        // select the root entity
         criteriaQuery.select(root);
 
+        // apply filtering if filter and filterBy are provided
         if (filter != null && filterBy != null && !filter.isEmpty() && !filterBy.isEmpty()) {
+            // handle filtering based on different fields
             if (filter.equals("type")) {
+                // if filtering by 'type', retrieve Type entity by name and add a predicate
                 criteriaQuery.where(builder.equal(
                         root.get(filter),
                         typeRepository.findByName(filterBy).orElseThrow(
-                        () -> new RuntimeException("Type not found exception")))
+                                () -> new RuntimeException("Type not found exception")))
                 );
             } else if (filter.equals("category")) {
+                // if filtering by 'category', retrieve Category entity by name and add a predicate
                 criteriaQuery.where(builder.equal(
                         root.get(filter),
                         categoryRepository.findByName(filterBy).orElseThrow(
                                 () -> new RuntimeException("Category not found exception")))
                 );
             } else if (filter.equals("sex")) {
+                // if filtering by 'sex', directly add a predicate with the provided value
                 criteriaQuery.where(builder.equal(
                         root.get(filter),
                         filterBy
                 ));
             } else {
-                throw new RuntimeException("Filter nor found exception");
+                // if the filter field is not recognized, throw an exception
+                throw new RuntimeException("Filter not found exception");
             }
         }
 
-        if (sort != null && sortBy != null && !sort.isEmpty() && !sortBy.isEmpty()) {
-            if ("asc".equalsIgnoreCase(sortBy)) {
-                criteriaQuery.orderBy(builder.asc(root.get(sort)));
-            } else if ("desc".equalsIgnoreCase(sortBy)) {
-                criteriaQuery.orderBy(builder.desc(root.get(sort)));
+        // apply sorting if sortBy and sort are provided
+        if (sortBy != null && sort != null && !sortBy.isEmpty() && !sort.isEmpty()) {
+            // handle sorting based on the specified field and order
+            if ("asc".equalsIgnoreCase(sort)) {
+                // sort in ascending order
+                criteriaQuery.orderBy(builder.asc(root.get(sortBy)));
+            } else if ("desc".equalsIgnoreCase(sort)) {
+                // sort in descending order
+                criteriaQuery.orderBy(builder.desc(root.get(sortBy)));
             }
         }
 
+        // execute the query and return the result list
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
 }
