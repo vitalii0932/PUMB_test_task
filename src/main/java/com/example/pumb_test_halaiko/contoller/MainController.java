@@ -87,7 +87,6 @@ public class MainController {
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "sortBy") String sortBy
     ) {
-
         return ResponseEntity.ok(animalService.findAnimalsByParams(filter, filterBy, sort, sortBy));
     }
 
