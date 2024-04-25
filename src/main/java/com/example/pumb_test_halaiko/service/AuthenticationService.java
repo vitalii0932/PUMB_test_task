@@ -1,5 +1,7 @@
 package com.example.pumb_test_halaiko.service;
 
+import com.example.pumb_test_halaiko.config.JwtService;
+
 import com.example.pumb_test_halaiko.dto.AuthenticationRequest;
 import com.example.pumb_test_halaiko.dto.AuthenticationResponse;
 import com.example.pumb_test_halaiko.repository.UserRepository;
