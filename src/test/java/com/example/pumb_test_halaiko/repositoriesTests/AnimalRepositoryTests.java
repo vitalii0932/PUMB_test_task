@@ -111,14 +111,13 @@ public class AnimalRepositoryTests {
     @Transactional
     public void updateTest() {
         var savedAnimal = animalRepository.save(testAnimal);
-        var oldCost = savedAnimal.getCost();
 
         savedAnimal.setCost(10.0);
 
         var updatedAnimal = animalRepository.save(savedAnimal);
 
         assert (Objects.equals(updatedAnimal.getId(), savedAnimal.getId()));
-        assert (!Objects.equals(updatedAnimal.getCost(), oldCost));
+        assert (Objects.equals(updatedAnimal.getCost(), 10.0));
     }
 
     /**

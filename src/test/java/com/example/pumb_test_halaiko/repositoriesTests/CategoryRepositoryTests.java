@@ -1,11 +1,7 @@
 package com.example.pumb_test_halaiko.repositoriesTests;
 
 import com.example.pumb_test_halaiko.model.Category;
-import com.example.pumb_test_halaiko.model.Category;
-import com.example.pumb_test_halaiko.model.Type;
 import com.example.pumb_test_halaiko.repository.CategoryRepository;
-import com.example.pumb_test_halaiko.repository.CategoryRepository;
-import com.example.pumb_test_halaiko.repository.TypeRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * CategoryRepo tests
@@ -135,14 +130,13 @@ public class CategoryRepositoryTests {
     @Transactional
     public void updateTest() {
         var savedCategory = categoryRepository.save(testCategory);
-        var oldName = savedCategory.getName();
 
         savedCategory.setName("TEST CATEGORY");
 
         var updatedCategory = categoryRepository.save(savedCategory);
 
         assert (Objects.equals(updatedCategory.getId(), savedCategory.getId()));
-        assert (!Objects.equals(updatedCategory.getName(), oldName));
+        assert (Objects.equals(updatedCategory.getName(), "TEST CATEGORY"));
     }
 
     /**
