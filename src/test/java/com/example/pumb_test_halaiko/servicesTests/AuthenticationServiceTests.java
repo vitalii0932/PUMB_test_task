@@ -54,6 +54,7 @@ public class AuthenticationServiceTests {
             assert (!registerResponse.getToken().isEmpty());
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
+            return;
         }
 
         // delete new user
@@ -97,6 +98,7 @@ public class AuthenticationServiceTests {
             assert (!registerResponse.getToken().isEmpty());
         } catch (RuntimeException ex) {
             System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }

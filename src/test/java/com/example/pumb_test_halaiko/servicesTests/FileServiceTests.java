@@ -40,7 +40,11 @@ public class FileServiceTests {
     @CsvSource({
             "animals.csv, text/csv, 6",
             "animals.xml, text/xml, 7",
-            "test.txt, text/plain, 0"
+            "test.txt, text/plain, 0",
+            "empty.csv, text/csv, 0",
+            "empty.xml, text/xml, 0",
+            "random.csv, text/csv, 0",
+            "random.xml, text/xml, 0"
     })
     public void readFileTest(String fileName, String contentType, Long addedAnimalsCount) throws Exception {
         // current animals count in db
@@ -55,6 +59,7 @@ public class FileServiceTests {
         } catch (IOException ex) {
             // throw if extension is not supported
             System.out.println(ex.getMessage());
+            ex.printStackTrace();
             return;
         }
 
