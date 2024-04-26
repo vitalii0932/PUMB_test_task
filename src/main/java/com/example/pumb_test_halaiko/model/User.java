@@ -23,7 +23,7 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "animal_sequence", sequenceName = "animal_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "user_strategy", allocationSize = 1)
     private Integer id;
     private String email;
     private String password;

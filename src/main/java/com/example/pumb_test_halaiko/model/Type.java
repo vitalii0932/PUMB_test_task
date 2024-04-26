@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class Type {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "animal_sequence", sequenceName = "animal_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "type_strategy", allocationSize = 1)
     private Integer id;
     private String name;
 }

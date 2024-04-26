@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 @Entity(name = "Animals")
 public class Animal {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "animal_sequence")
-    @SequenceGenerator(name = "animal_sequence", sequenceName = "animal_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "animal_strategy", allocationSize = 1)
     private Integer id;
     private String name;
     @ManyToOne
