@@ -1,4 +1,4 @@
-package com.example.pumb_test_halaiko;
+package com.example.pumb_test_halaiko.contollersTests;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

@@ -1,4 +1,4 @@
-package com.example.pumb_test_halaiko;
+package com.example.pumb_test_halaiko.contollersTests;
 
 import com.example.pumb_test_halaiko.dto.AuthenticationRequest;
 import com.example.pumb_test_halaiko.dto.RegisterRequest;

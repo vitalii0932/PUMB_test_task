@@ -1,4 +1,4 @@
-package com.example.pumb_test_halaiko;
+package com.example.pumb_test_halaiko.securityTests;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
