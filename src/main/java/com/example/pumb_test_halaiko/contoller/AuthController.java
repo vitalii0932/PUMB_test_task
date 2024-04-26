@@ -5,6 +5,7 @@ import com.example.pumb_test_halaiko.dto.AuthenticationResponse;
 import com.example.pumb_test_halaiko.dto.RegisterRequest;
 import com.example.pumb_test_halaiko.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @GetMapping("")
-    public String loginPage(Model model) {
+    public String getLoginPage(Model model) {
         return "login";
     }
 
@@ -38,7 +39,11 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.register(request));
+        try {
+            return ResponseEntity.ok(authenticationService.register(request));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
     }
 
     /**
@@ -51,6 +56,10 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
+        try {
+            return ResponseEntity.ok(authenticationService.authenticate(request));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
     }
 }

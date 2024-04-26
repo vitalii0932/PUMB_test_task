@@ -45,13 +45,12 @@ public class MainControllerTests {
      * @throws Exception if something wrong
      */
     @Test
-    void getMainPageTest_shouldReturnViewWithSameTitle() throws Exception {
+    public void getMainPageTest_shouldReturnViewWithSameTitle() throws Exception {
         this.mockMvc.perform(
                 get("/api/v1/test_task"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("<title>Main page</title>")));
-
     }
 
     /**
@@ -99,7 +98,10 @@ public class MainControllerTests {
     /**
      * check filter data function with success result
      *
-     * @param argumentsAccessor - arguments
+     * @param filter - filter param
+     * @param filterBy - filter value
+     * @param sort - sort param
+     * @param sortBy - sort type
      * @throws Exception if something wrong
      */
     @ParameterizedTest
@@ -108,12 +110,7 @@ public class MainControllerTests {
             "category,First category,id,desc",
             "sex,female,id,desc"
     })
-    public void FilterDataTest_Success(ArgumentsAccessor argumentsAccessor) throws Exception {
-        String filter = argumentsAccessor.getString(0);
-        String filterBy = argumentsAccessor.getString(1);
-        String sort = argumentsAccessor.getString(2);
-        String sortBy = argumentsAccessor.getString(3);
-
+    public void FilterDataTest_Success(String filter, String filterBy, String sort, String sortBy) throws Exception {
         checkFilteredData(filter, filterBy, sort, sortBy);
     }
 

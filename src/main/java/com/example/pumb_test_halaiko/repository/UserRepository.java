@@ -16,4 +16,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @return optional user
      */
     Optional<User> findUserByEmail(String email);
+
+    /**
+     * delete user by his email
+     *
+     * @param email - user email
+     */
+    void deleteByEmail(String email);
+
+    void deleteAll();
 }
