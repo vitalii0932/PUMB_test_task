@@ -1,7 +1,6 @@
 package com.example.pumb_test_halaiko.service;
 
 import com.example.pumb_test_halaiko.repository.CategoryRepository;
-import com.example.pumb_test_halaiko.repository.TypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,11 +18,11 @@ public class CategoryService {
     public List<String> getAllNames() {
         System.out.println(categoryRepository.findAll());
 
-        List<String> allTypeNamesWithPrefix = categoryRepository.getAllCategoriesNames().stream()
+        List<String> allCategoriesNamesWithPrefix = categoryRepository.getAllCategoriesNames().stream()
                 .map(name -> "category." + name)
                 .collect(Collectors.toList());
 
-        return allTypeNamesWithPrefix;
+        return allCategoriesNamesWithPrefix;
 
     }
 }

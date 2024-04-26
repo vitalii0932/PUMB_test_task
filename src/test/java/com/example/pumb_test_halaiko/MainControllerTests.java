@@ -131,43 +131,50 @@ public class MainControllerTests {
                         .param("filter", filter)
                         .param("filterBy", filterBy)
                         .param("sort", sort)
-                        .param("sortBy", sortBy))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
+                        .param("sortBy", sortBy)) // perform a GET request with parameters
+                .andExpect(status().isOk()) // expecting HTTP status 200 (OK)
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // expecting JSON content type
+                .andReturn(); // get the result of the performed action
 
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
+        String jsonResponse = mvcResult.getResponse().getContentAsString(); // extract JSON response
         List<Animal> responseList = new ObjectMapper().readValue(jsonResponse, new TypeReference<List<Animal>>() {});
 
-        int lastElemId = 0;
+        int lastElemId = -1; // set n-1 element id
         for (var elem : responseList) {
+            /* filtering check */
             switch (filter) {
+                // checks if you're taking animals with a certain type
                 case "type" -> {
                     assert (elem.getType().getName().equals(filterBy));
                 }
+                // checks if you're taking animals with a certain category
                 case "category" -> {
-                    System.out.println(elem.getCategory().getName());
-                    System.out.println(filterBy);
                     assert (elem.getCategory().getName().equals(filterBy));
                 }
+                // checks if you're taking animals with a certain sex
                 case "sex" -> {
                     assert (elem.getSex().equals(filterBy));
                 }
             }
 
-            if (lastElemId == 0) {
+            /* sorting check */
+            if (lastElemId == -1) {
+                // set the identifier of element n-1, if it is the first iter
                 lastElemId = elem.getId();
             } else {
+                // if this isn't the first iter, check the elements sorting
                 switch (sortBy) {
+                    // desc sorting check
                     case "desc" -> {
                         assert (lastElemId >= elem.getId());
-                        lastElemId = elem.getId();
                     }
+                    // asc sorting check
                     case "asc" -> {
                         assert (lastElemId <= elem.getId());
-                        lastElemId = elem.getId();
                     }
                 }
+                // update n-1 elem id
+                lastElemId = elem.getId();
             }
         }
     }
