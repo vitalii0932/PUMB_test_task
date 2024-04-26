@@ -56,6 +56,9 @@ public class MainControllerTests {
     /**
      * test uploading different files
      *
+     * @param fileName - file name
+     * @param contentType - file content type
+     * @param expectSuccess - expected result
      * @throws Exception if something wrong
      */
     @ParameterizedTest

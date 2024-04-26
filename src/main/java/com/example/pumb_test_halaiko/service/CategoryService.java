@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * service class for Category
+ */
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
