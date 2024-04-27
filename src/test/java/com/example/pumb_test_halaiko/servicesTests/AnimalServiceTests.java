@@ -5,6 +5,7 @@ import com.example.pumb_test_halaiko.repository.AnimalRepository;
 import com.example.pumb_test_halaiko.repository.TypeRepository;
 import com.example.pumb_test_halaiko.service.AnimalService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.Assert.fail;
 
 /**
  * AnimalService tests
@@ -23,7 +22,7 @@ import static org.junit.Assert.fail;
 public class AnimalServiceTests {
 
     @Autowired
-    private AnimalService service;
+    private AnimalService animalService;
 
     @Autowired
     private AnimalRepository animalRepository;
@@ -67,7 +66,7 @@ public class AnimalServiceTests {
         
         try {
             // try to save animal
-            savedAnimal = service.save(animalParams);
+            savedAnimal = animalService.save(animalParams);
 
             assert !expectedResult || expectedCategoryId.equals(savedAnimal.getCategory().getId()) :
                     "Expected category ID: " + expectedCategoryId + ", but got: " + savedAnimal.getCategory().getId();
@@ -75,7 +74,7 @@ public class AnimalServiceTests {
             // if something wrong
             if (expectedResult) {
                 // if expected true
-                fail("Expected successful save, but got exception: " + ex.getMessage());
+                Assertions.fail("Expected successful save, but got exception: " + ex.getMessage());
             }
             ex.fillInStackTrace();
         } finally {
@@ -115,7 +114,7 @@ public class AnimalServiceTests {
             // if something wrong
             if (expectedResult) {
                 // if expected true
-                fail(String.format("Expected result was OK. Something wrong in case: {%s, %s, %s, %s}", filter, filterBy, sort, sortBy));
+                Assertions.fail(String.format("Expected result was OK. Something wrong in case: {%s, %s, %s, %s}", filter, filterBy, sort, sortBy));
             }
             ex.fillInStackTrace();
         }
@@ -131,7 +130,7 @@ public class AnimalServiceTests {
      * @throws RuntimeException if something wrong
      */
     private void checkFilteredData(String filter, String filterBy, String sort, String sortBy) throws RuntimeException {
-        List<Animal> responseList = service.findAnimalsByParams(filter, filterBy, sort, sortBy);
+        List<Animal> responseList = animalService.findAnimalsByParams(filter, filterBy, sort, sortBy);
 
         int lastElemId = -1; // set n-1 element id
         for (var elem : responseList) {
