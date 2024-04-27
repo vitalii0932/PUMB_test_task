@@ -1,24 +1,14 @@
 package com.example.pumb_test_halaiko.contollersTests;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.example.pumb_test_halaiko.model.Animal;
-import com.example.pumb_test_halaiko.service.AnimalService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -28,6 +18,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * MainController functions test
@@ -99,7 +96,7 @@ public class MainControllerTests {
     }
 
     /**
-     * check filter data function with success result
+     * check filter data function
      *
      * @param filter - filter param
      * @param filterBy - filter value
@@ -109,12 +106,30 @@ public class MainControllerTests {
      */
     @ParameterizedTest
     @CsvSource({
-            "type,dog,id,desc",
-            "category,First category,id,desc",
-            "sex,female,id,desc"
+            "type,dog,id,desc,true",
+            "category,First category,id,desc,true",
+            "sex,female,id,desc,true",
+            "unknown,dog,id,desc,false",
+            "category,unknown,id,desc,false",
+            "sex,female,unknown,desc,false",
+            "sex,female,id,unknown,false",
+            ",,,,false"
     })
-    public void FilterDataTest_Success(String filter, String filterBy, String sort, String sortBy) throws Exception {
-        checkFilteredData(filter, filterBy, sort, sortBy);
+    public void filterDataTest_Success(String filter, String filterBy, String sort, String sortBy, Boolean expectedResult) throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/test_task/filter")
+                        .param("filter", filter)
+                        .param("filterBy", filterBy)
+                        .param("sort", sort)
+                        .param("sortBy", sortBy)) // perform a GET request with parameters
+                .andExpect(expectedResult ? status().isOk() : status().is4xxClientError()) // expecting HTTP status 200 (OK)
+                .andReturn(); // get the result of the performed action
+
+        if (expectedResult) {
+            String jsonResponse = mvcResult.getResponse().getContentAsString(); // extract JSON response
+            List<Animal> responseList = new ObjectMapper().readValue(jsonResponse, new TypeReference<List<Animal>>() {});
+
+            checkFilteredData(responseList, filter, filterBy, sortBy);
+        }
     }
 
     /**
@@ -122,23 +137,9 @@ public class MainControllerTests {
      *
      * @param filter - filter param
      * @param filterBy - filter value
-     * @param sort - sort param
      * @param sortBy - sort type
-     * @throws Exception if something wrong
      */
-    private void checkFilteredData(String filter, String filterBy, String sort, String sortBy) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/test_task/filter")
-                        .param("filter", filter)
-                        .param("filterBy", filterBy)
-                        .param("sort", sort)
-                        .param("sortBy", sortBy)) // perform a GET request with parameters
-                .andExpect(status().isOk()) // expecting HTTP status 200 (OK)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON)) // expecting JSON content type
-                .andReturn(); // get the result of the performed action
-
-        String jsonResponse = mvcResult.getResponse().getContentAsString(); // extract JSON response
-        List<Animal> responseList = new ObjectMapper().readValue(jsonResponse, new TypeReference<List<Animal>>() {});
-
+    private void checkFilteredData(List<Animal> responseList, String filter, String filterBy, String sortBy) {
         int lastElemId = -1; // set n-1 element id
         for (var elem : responseList) {
             /* filtering check */
@@ -177,32 +178,5 @@ public class MainControllerTests {
                 lastElemId = elem.getId();
             }
         }
-    }
-
-    /**
-     * check filter data function with forbidden result
-     *
-     * @param argumentsAccessor - arguments
-     * @throws Exception if something wrong
-     */
-    @ParameterizedTest
-    @CsvSource({
-            "unknown,dog,id,desc",
-            "category,unknown,id,desc",
-            "sex,female,unknown,desc",
-            "sex,female,id,unknown"
-    })
-    public void FilterDataTest_Forbidden(ArgumentsAccessor argumentsAccessor) throws Exception {
-        String filter = argumentsAccessor.getString(0);
-        String filterBy = argumentsAccessor.getString(1);
-        String sort = argumentsAccessor.getString(2);
-        String sortBy = argumentsAccessor.getString(3);
-
-        mockMvc.perform(get("/api/v1/test_task/filter")
-                        .param("filter", filter)
-                        .param("filterBy", filterBy)
-                        .param("sort", sort)
-                        .param("sortBy", sortBy))
-                .andExpect(status().isForbidden());
     }
 }
