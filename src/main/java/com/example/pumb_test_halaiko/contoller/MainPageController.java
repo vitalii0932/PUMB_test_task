@@ -10,10 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * controller for loading the home page
+ */
 @Controller
 @RequestMapping("/api/v1/test_task")
 @RequiredArgsConstructor
 public class MainPageController {
+
     private final CategoryService categoryService;
     private final TypeService typeService;
 

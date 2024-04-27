@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * controller for main page
+ * controller for functions in main page
  */
 @RestController
 @RequestMapping("/api/v1/test_task")
