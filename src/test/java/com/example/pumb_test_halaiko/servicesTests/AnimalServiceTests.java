@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Objects;
+import java.util.List;
 
 import static org.junit.Assert.fail;
 
 /**
- * AnimalServicee tests
+ * AnimalService tests
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,9 +54,9 @@ public class AnimalServiceTests {
             "test product, test_type,, 10.0, 30.0, 0, false",
             "test product, test_type, male,, 30.0, 0, false",
             "test product, test_type, male, 10.0,, 0, false",
-            "test product, test_type, uncorrect, 10.0, 30.0, 0, false",
-            "test product, test_type, male, uncorrect, 30.0, 0, false",
-            "test product, test_type, male, 10.0, uncorrect, 0, false"
+            "test product, test_type, uncorrected, 10.0, 30.0, 0, false",
+            "test product, test_type, male, uncorrected, 30.0, 0, false",
+            "test product, test_type, male, 10.0, uncorrected, 0, false"
     })
     public void saveTest(String name, String type, String sex,
                          String weight, String cost,
@@ -69,11 +69,8 @@ public class AnimalServiceTests {
             // try to save animal
             savedAnimal = service.save(animalParams);
 
-            if (expectedResult) {
-                // if expectedResult true check the expected category
-                assert expectedCategoryId.equals(savedAnimal.getCategory().getId()) :
-                        "Expected category ID: " + expectedCategoryId + ", but got: " + savedAnimal.getCategory().getId();
-            } 
+            assert !expectedResult || expectedCategoryId.equals(savedAnimal.getCategory().getId()) :
+                    "Expected category ID: " + expectedCategoryId + ", but got: " + savedAnimal.getCategory().getId();
         } catch (IllegalArgumentException | NullPointerException ex) {
             // if something wrong
             if (expectedResult) {
@@ -86,6 +83,92 @@ public class AnimalServiceTests {
             if (savedAnimal != null) {
                 animalRepository.deleteById(savedAnimal.getId());
                 typeRepository.deleteById(savedAnimal.getType().getId());
+            }
+        }
+    }
+
+    /**
+     * findAnimalsByParams function test
+     *
+     * @param filter - filter param
+     * @param filterBy - filter value
+     * @param sort - sort param
+     * @param sortBy - sort type
+     * @param expectedResult - expected result status
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "type,dog,id,desc,true",
+            "category,First category,id,desc,true",
+            "sex,female,id,desc,true",
+            "unknown,dog,id,desc,false",
+            "category,unknown,id,desc,false",
+            "sex,female,unknown,desc,false",
+            "sex,female,id,unknown,false",
+            ",,,,false"
+    })
+    public void findAnimalsByParamsTest(String filter, String filterBy, String sort, String sortBy, Boolean expectedResult) {
+        try {
+            // try to get data with params and check it
+            checkFilteredData(filter, filterBy, sort, sortBy);
+        } catch (RuntimeException ex) {
+            // if something wrong
+            if (expectedResult) {
+                // if expected true
+                fail(String.format("Expected result was OK. Something wrong in case: {%s, %s, %s, %s}", filter, filterBy, sort, sortBy));
+            }
+            ex.fillInStackTrace();
+        }
+    }
+
+    /**
+     * check filtered data function
+     *
+     * @param filter - filter param
+     * @param filterBy - filter value
+     * @param sort - sort param
+     * @param sortBy - sort type
+     * @throws RuntimeException if something wrong
+     */
+    private void checkFilteredData(String filter, String filterBy, String sort, String sortBy) throws RuntimeException {
+        List<Animal> responseList = service.findAnimalsByParams(filter, filterBy, sort, sortBy);
+
+        int lastElemId = -1; // set n-1 element id
+        for (var elem : responseList) {
+            /* filtering check */
+            switch (filter) {
+                // checks if you're taking animals with a certain type
+                case "type" -> {
+                    assert (elem.getType().getName().equals(filterBy));
+                }
+                // checks if you're taking animals with a certain category
+                case "category" -> {
+                    assert (elem.getCategory().getName().equals(filterBy));
+                }
+                // checks if you're taking animals with a certain sex
+                case "sex" -> {
+                    assert (elem.getSex().equals(filterBy));
+                }
+            }
+
+            /* sorting check */
+            if (lastElemId == -1) {
+                // set the identifier of element n-1, if it is the first iter
+                lastElemId = elem.getId();
+            } else {
+                // if this isn't the first iter, check the elements sorting
+                switch (sortBy) {
+                    // desc sorting check
+                    case "desc" -> {
+                        assert (lastElemId >= elem.getId());
+                    }
+                    // asc sorting check
+                    case "asc" -> {
+                        assert (lastElemId <= elem.getId());
+                    }
+                }
+                // update n-1 elem id
+                lastElemId = elem.getId();
             }
         }
     }
