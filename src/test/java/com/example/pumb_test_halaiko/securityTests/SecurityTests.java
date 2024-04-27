@@ -28,7 +28,7 @@ public class SecurityTests {
      *
      * @param url - page url
      * @param expectedPage - expected page
-     * @param expectedResult - expected result (ok or redirected to login)
+     * @param expectedResult - expected result (ok or redirected to login page)
      * @throws Exception if something wrong
      */
     @ParameterizedTest

@@ -126,7 +126,8 @@ public class MainControllerTests {
 
         if (expectedResult) {
             String jsonResponse = mvcResult.getResponse().getContentAsString(); // extract JSON response
-            List<Animal> responseList = new ObjectMapper().readValue(jsonResponse, new TypeReference<List<Animal>>() {});
+            List<Animal> responseList = new ObjectMapper().readValue(jsonResponse, new TypeReference<>() {
+            });
 
             checkFilteredData(responseList, filter, filterBy, sortBy);
         }
