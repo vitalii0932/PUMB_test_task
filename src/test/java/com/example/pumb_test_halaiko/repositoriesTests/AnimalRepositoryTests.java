@@ -41,8 +41,15 @@ public class AnimalRepositoryTests {
     @BeforeEach
     public void setUpTheTestAnimal() {
         testAnimal = new Animal();
-        Category category = categoryRepository.findByName("First category").get();
-        Type type = typeRepository.findByName("cat").get();
+
+        Category category = new Category();
+        category.setName("test category");
+        category = categoryRepository.save(category);
+
+        Type type = new Type();
+        type.setName("test type");
+        type = typeRepository.save(type);
+
         testAnimal.setName("test");
         testAnimal.setCategory(category);
         testAnimal.setType(type);
@@ -56,6 +63,8 @@ public class AnimalRepositoryTests {
      */
     @AfterEach
     public void deleteTheTestAnimal() {
+        categoryRepository.deleteAllByName(testAnimal.getCategory().getName());
+        typeRepository.deleteAllByName(testAnimal.getType().getName());
         animalRepository.deleteAllByName(testAnimal.getName());
     }
 
