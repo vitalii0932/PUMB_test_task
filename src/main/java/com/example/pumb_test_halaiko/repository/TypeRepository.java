@@ -12,6 +12,12 @@ import java.util.Optional;
  */
 public interface TypeRepository extends JpaRepository<Type, Integer> {
     /**
+     * delete all types with some name
+     *
+     * @param name - type name
+     */
+    void deleteAllByName(String name);
+    /**
      * find optional Type by its name
      *
      * @param name - type name

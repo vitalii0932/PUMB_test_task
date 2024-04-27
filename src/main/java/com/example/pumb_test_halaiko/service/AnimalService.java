@@ -41,7 +41,7 @@ public class AnimalService {
      */
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Retryable(maxAttempts = 5)
-    public void save(String[] values) throws IllegalArgumentException {
+    public Animal save(String[] values) throws IllegalArgumentException, NullPointerException {
         // create a new Animal Entity
         Animal animal = new Animal();
 
@@ -84,7 +84,7 @@ public class AnimalService {
         }
 
         // save entity in db
-        animalRepository.save(animal);
+        return animalRepository.save(animal);
     }
 
     /**
@@ -150,6 +150,8 @@ public class AnimalService {
             } else if ("desc".equalsIgnoreCase(sort)) {
                 // sort in descending order
                 criteriaQuery.orderBy(builder.desc(root.get(sortBy)));
+            } else {
+                throw new RuntimeException("Sort type not found exception");
             }
         }
 

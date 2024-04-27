@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<books>
+    <book id="1">
+        <title>The Lord of the Rings</title>
+        <author>J. R. R. Tolkien</author>.
+        <genre>Fantasy</genre>
+        <year>1954</year>
+        <pages>1178</pages>
+        <language>English</language>
+        <translation>V. Muravyev, A. Kistiakovsky</translation>
+    </book>
+    <book id="2">
+        <title>The Little Prince</title>
+        <author>Antoine de Saint-Exupery</author>.
+        <genre>Fairy Tale</genre>
+        <year>1943</year>
+        <pages>208</pages>
+        <language>French</language>
+        <translation>N. Gal</translation>
+    </book>
+</books>

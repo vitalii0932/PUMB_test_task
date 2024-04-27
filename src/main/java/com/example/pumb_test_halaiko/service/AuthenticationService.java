@@ -27,34 +27,15 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * user authentication in the system and sending a jwt token
-     *
-     * @param request - request from user with auth-parameters
-     * @return jwt token
-     */
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
-        var user = userRepository.findUserByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-    }
-
-    /**
      * user registration in the system and sending a jwt token
      *
      * @param request - request from user with register-parameters
      * @return jwt token
      */
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) throws RuntimeException {
+        if (userRepository.findUserByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("This email is taken already");
+        }
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -65,6 +46,28 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder()
                 .token(jwt)
+                .build();
+    }
+
+    /**
+     * user authentication in the system and sending a jwt token
+     *
+     * @param request - request from user with auth-parameters
+     * @return jwt token
+     */
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws RuntimeException {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        var user = userRepository.findUserByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
                 .build();
     }
 }

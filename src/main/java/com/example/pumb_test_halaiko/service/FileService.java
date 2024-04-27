@@ -19,6 +19,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
+/**
+ * service class for Files logic
+ */
 @Service
 @RequiredArgsConstructor
 public class FileService {
@@ -32,6 +35,10 @@ public class FileService {
      * @throws Exception if something is wrong when reading the file
      */
     public void readFile(MultipartFile file) throws Exception {
+        // check the file is not empty
+        if (file.isEmpty()) {
+            throw new IOException("File is empty");
+        }
         // get the file extension
         String fileName = file.getOriginalFilename();
         String fileExtension = null;

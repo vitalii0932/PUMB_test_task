@@ -12,6 +12,13 @@ import java.util.Optional;
  */
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     /**
+     * delete all category with some name
+     *
+     * @param name - category name
+     */
+    void deleteAllByName(String name);
+
+    /**
      * get optional category by its name
      *
      * @param name - category name
