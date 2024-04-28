@@ -17,11 +17,10 @@ public class LoginPageController {
     /**
      * load login page function
      *
-     * @param model - the model object used to pass data to the view
      * @return the view for the login page
      */
     @GetMapping("")
-    public String getLoginPage(Model model) {
+    public String getLoginPage() {
         return "login";
     }
 }
