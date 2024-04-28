@@ -62,7 +62,11 @@ public class MainControllerTests {
     @CsvSource({
             "animals.csv, text/csv, true",
             "animals.xml, text/xml, true",
-            "test.txt, text/plain, false"
+            "test.txt, text/plain, false",
+            "empty.csv, text/csv, false",
+            "empty.xml, text/xml, false",
+            "random.csv, text/csv, false",
+            "random.xml, text/xml, false"
     })
     public void uploadFileTest(String fileName, String contentType, boolean expectSuccess) throws Exception {
         byte[] fileBytes = readFileFromResources(fileName);
@@ -85,7 +89,7 @@ public class MainControllerTests {
      * @throws IOException if something wrong
      */
     private byte[] readFileFromResources(String fileName) throws IOException {
-        File file = ResourceUtils.getFile("classpath:" + fileName);
+        File file = ResourceUtils.getFile("classpath:test_files/" + fileName);
 
         FileInputStream input = new FileInputStream(file);
         byte[] bytes = new byte[(int) file.length()];

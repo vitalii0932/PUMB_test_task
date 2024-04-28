@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
+
 /**
  * controller for loading the home page
  */
@@ -32,9 +34,9 @@ public class MainPageController {
         var typesFields = typeService.getAllNames();
         typesFields.addAll(categoryService.getAllNames());
 
-        for(var sex : Sex.values()) {
-            typesFields.add("sex." + sex.toString().toLowerCase());
-        }
+        typesFields.addAll(Arrays.stream(Sex.values())
+                .map(sex -> "sex." + sex.toString().toLowerCase())
+                .toList());
 
         model.addAttribute("typesFields", typesFields);
 

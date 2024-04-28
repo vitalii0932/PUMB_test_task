@@ -3,6 +3,7 @@ package com.example.pumb_test_halaiko.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class Animal {
      */
     public static List<String> getAnimalFields() {
         return Arrays.stream(Animal.class.getDeclaredFields())
-                .map(field -> field.getName())
+                .map(Field::getName)
                 .collect(Collectors.toList());
     }
 }

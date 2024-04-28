@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * jwt service class
+ */
 @Service
 public class JwtService {
     @Value("${secret.secret_key}")

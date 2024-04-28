@@ -1,10 +1,7 @@
 package com.example.pumb_test_halaiko.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -18,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * service class for Files logic
@@ -64,13 +63,32 @@ public class FileService {
      * @throws Exception if something is wrong when reading the file
      */
     private void readFromCsv(MultipartFile file) throws Exception {
+        // expected column headers
+        List<String> expectedHeaders = Arrays.asList("name", "type", "sex", "weight", "cost");
+
         /*
         get input stream from file,
         create a buffered reader
          */
         try (InputStream inputStream = file.getInputStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
+            // read the first line which should contain the headers
+            String line = reader.readLine();
+
+            if (line == null) {
+                throw new IllegalArgumentException("Empty file: no headers found.");
+            }
+
+            String[] headers = line.split(",");
+            headers = Arrays.stream(headers)
+                    .map(String::trim)
+                    .map(String::toLowerCase)
+                    .toArray(String[]::new);
+
+            // check if all expected headers are present
+            if (!Arrays.asList(headers).containsAll(expectedHeaders)) {
+                throw new IllegalArgumentException("Missing or incorrect headers in the CSV file.");
+            }
 
             /* read file while reader has a new line */
             while ((line = reader.readLine()) != null) {
@@ -115,6 +133,11 @@ public class FileService {
          */
         document.getDocumentElement().normalize();
         NodeList nodeList = document.getElementsByTagName("animal");
+
+        if (nodeList.getLength() == 0) {
+            throw new IllegalArgumentException("The file does not contain the required data.");
+        }
+
         String[] params = {"name", "type", "sex", "weight", "cost"};
 
         // loop through each "animal" element in the NodeList
