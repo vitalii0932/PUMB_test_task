@@ -85,7 +85,7 @@ public class MainControllerTests {
      * @throws IOException if something wrong
      */
     private byte[] readFileFromResources(String fileName) throws IOException {
-        File file = ResourceUtils.getFile("classpath:" + fileName);
+        File file = ResourceUtils.getFile("classpath:test_files/" + fileName);
 
         FileInputStream input = new FileInputStream(file);
         byte[] bytes = new byte[(int) file.length()];
