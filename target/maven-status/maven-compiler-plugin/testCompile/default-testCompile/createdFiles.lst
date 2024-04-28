@@ -1,0 +1,13 @@
+com\example\pumb_test_halaiko\servicesTests\FileServiceTests.class
+com\example\pumb_test_halaiko\repositoriesTests\AnimalRepositoryTests.class
+com\example\pumb_test_halaiko\repositoriesTests\UserRepositoryTests.class
+com\example\pumb_test_halaiko\contollersTests\MainControllerTests$1.class
+com\example\pumb_test_halaiko\repositoriesTests\TypeRepositoryTests.class
+com\example\pumb_test_halaiko\contollersTests\MainControllerTests.class
+com\example\pumb_test_halaiko\servicesTests\AnimalServiceTests.class
+com\example\pumb_test_halaiko\repositoriesTests\CategoryRepositoryTests.class
+com\example\pumb_test_halaiko\contollersTests\AuthControllerTests.class
+com\example\pumb_test_halaiko\securityTests\SecurityTests.class
+com\example\pumb_test_halaiko\servicesTests\CategoryServiceTests.class
+com\example\pumb_test_halaiko\servicesTests\AuthenticationServiceTests.class
+com\example\pumb_test_halaiko\servicesTests\TypeServiceTests.class

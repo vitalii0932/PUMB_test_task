@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<section>
+    <div class="block">
+        <header>Тестове завдання<br>Галайко Віталій halaikovitalii@ukr.net</header>
+    </div>
+
+    <div class="block">
+        <p id="file_request" style="margin-top: 0; font-size: 20px"></p>
+
+        <form enctype="multipart/form-data">
+            <label for="file" class="custom-file-input">Завантажте файл</label>
+            <input type="file" id="file" name="file" onchange="displayFileName(this)" accept=".csv, .xml, .txt">
+            <span id="file-label">File path...</span>
+            <br>
+            <button type="submit">Надіслати файл</button>
+        </form>
+    </div>
+
+    <div class="block">
+        <div class="select-options">
+            <span style="padding: 10px">Оберіть тип фільтрування:</span>
+            <select class="select-css" style="width: 15%" id="filter">
+                <option>type</option>
+                <option>category</option>
+                <option>sex</option>
+            </select>
+
+            <select class="select-css" style="width: 15%" id="filter_param">
+                <option th:each="el : ${typesFields}" th:text="${el}"></option>
+            </select>
+
+            <span style="padding: 10px">Оберіть тип сортування:</span>
+            <select class="select-css" style="width: 12%" id="sort">
+                <option th:each="el : ${animalFields}" th:text="${el}"></option>
+            </select>
+
+            <select class="select-css" style="width: 7%" id="sort_param">
+                <option>desc</option>
+                <option>asc</option>
+            </select>
+        </div>
+
+        <button onclick="searchElements()">Пошук елементів</button>
+
+        <br>
+
+        <p id="search_request" style="margin-top: 15px; margin-bottom: 0; font-size: 20px"></p>
+
+        <textarea contenteditable="false" id="textArea">
+        </textarea>
+    </div>
+</section>
+
+<script th:src="@{/js/index.js}"></script>
+
+</body>
+</html>

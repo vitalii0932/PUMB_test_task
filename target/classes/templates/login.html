@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<button class="logout-btn" onclick="logout()">Log out</button>
+
+<section>
+    <div class="form-block">
+        <p id="error-message" style="margin-top: 0; font-size: 20px; display: none;">Invalid username and password.</p>
+
+        <form method="post" id="login_form">
+            <h3 style="margin-top: 0">Login Here</h3>
+
+            <label for="email">Email</label>
+            <input type="text" placeholder="Email" id="email" name="email">
+
+            <label for="password">Пароль</label>
+            <input type="password" placeholder="Password" id="password" name="password">
+
+            <br>
+
+            <button onclick="submitLoginForm()" type="button" style="width: 60%">Log In</button>
+        </form>
+    </div>
+</section>
+
+<script th:src="@{/js/login.js}"></script>
+
+</body>
+</html>

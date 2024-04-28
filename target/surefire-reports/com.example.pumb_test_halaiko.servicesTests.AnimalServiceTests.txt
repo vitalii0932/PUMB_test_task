@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.pumb_test_halaiko.servicesTests.AnimalServiceTests
+-------------------------------------------------------------------------------
+Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.151 s -- in com.example.pumb_test_halaiko.servicesTests.AnimalServiceTests
