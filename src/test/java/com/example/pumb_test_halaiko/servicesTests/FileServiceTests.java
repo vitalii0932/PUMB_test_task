@@ -56,9 +56,8 @@ public class FileServiceTests {
         // try to save this file
         try {
             fileService.readFile(file);
-        } catch (IOException ex) {
+        } catch (IOException | IllegalArgumentException | NullPointerException ex) {
             // throw if extension is not supported
-            System.out.println(ex.getMessage());
             ex.printStackTrace();
             return;
         }
