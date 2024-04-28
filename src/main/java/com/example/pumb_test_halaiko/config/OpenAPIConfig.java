@@ -24,6 +24,11 @@ public class OpenAPIConfig {
 
     private final ResourceLoader resourceLoader;
 
+    /**
+     * configuration OpenAPI Bean
+     *
+     * @return configured OpenAPI
+     */
     @Bean
     public OpenAPI myOpenAPI() {
         Contact contact = new Contact();
@@ -48,6 +53,13 @@ public class OpenAPIConfig {
         return new OpenAPI().info(info);
     }
 
+    /**
+     * get task description from the file in resources package
+     *
+     * @param fileName - file name
+     * @return text from the file
+     * @throws IOException if something wrong
+     */
     private String getTaskDescription(String fileName) throws IOException {
         Resource resource = resourceLoader.getResource("classpath:" + fileName);
         InputStream inputStream = resource.getInputStream();
