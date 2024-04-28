@@ -10,22 +10,18 @@ create table if not exists Category
     name varchar(30) not null
 );
 
--- Вставка записи для 'First category'
 insert into Category(id, name)
 select (select coalesce(max(id), 0) + 1 from Category), 'First category'
 where not exists(SELECT 1 from Category where name = 'First category');
 
--- Вставка записи для 'Second category'
 insert into Category(id, name)
 select (select coalesce(max(id), 0) + 1 from Category), 'Second category'
 where not exists(SELECT 1 from Category where name = 'Second category');
 
--- Вставка записи для 'Third category'
 insert into Category(id, name)
 select (select coalesce(max(id), 0) + 1 from Category), 'Third category'
 where not exists(SELECT 1 from Category where name = 'Third category');
 
--- Вставка записи для 'Fourth category'
 insert into Category(id, name)
 select (select coalesce(max(id), 0) + 1 from Category), 'Fourth category'
 where not exists(SELECT 1 from Category where name = 'Fourth category');
