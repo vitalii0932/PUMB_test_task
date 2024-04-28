@@ -1,12 +1,15 @@
 package com.example.pumb_test_halaiko.config;
 
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.context.annotation.Bean;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+
+/**
+ * open API (swagger) configuration class
+ */
 @Configuration
 public class OpenAPIConfig {
 
